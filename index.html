@@ -461,7 +461,6 @@
       <div class="panel">
         <h2>Visning</h2>
         <button id="fitBtn">Zoom til alle soner</button>
-        <button id="basemapBtn" style="margin-top:8px;">Vis bakgrunnskart</button>
       </div>
 
       <div class="panel info">
@@ -503,38 +502,25 @@
       inertia: false
     }).setView([59.91, 10.75], 8);
 
-    // Ingen bakgrunnsfliser fra start - det fjerner flimring. Knappen i sidepanelet
-    // slar Esri Dark Gray Canvas av og pa.
-    let osmLayer = null;
-
-    function toggleBasemap() {
-      if (osmLayer) {
-        map.removeLayer(osmLayer);
-        osmLayer = null;
-        document.getElementById('basemapBtn').textContent = 'Vis bakgrunnskart';
-      } else {
-        // Esri Dark Gray Canvas: morkt, krever ingen API-nokkel. Merk {z}/{y}/{x}-rekkefolgen.
-        osmLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-          attribution: 'Bakgrunnskart: Esri, HERE, Garmin, &copy; OpenStreetMap-bidragsytere',
-          maxZoom: 20,
-          maxNativeZoom: 16,
-          minZoom: 5,
-          noWrap: true,
-          keepBuffer: 8,
-          updateWhenIdle: true,
-          updateWhenZooming: false,
-          crossOrigin: true
-        }).addTo(map);
-        osmLayer.bringToBack();
-        document.getElementById('basemapBtn').textContent = 'Skjul bakgrunnskart';
-      }
-    }
+    // Bakgrunnskart er alltid synlig: Esri Dark Gray Canvas (krever ingen API-nokkel).
+    // Merk {z}/{y}/{x}-rekkefolgen.
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Bakgrunnskart: Esri, HERE, Garmin, &copy; OpenStreetMap-bidragsytere',
+      maxZoom: 20,
+      maxNativeZoom: 16,
+      minZoom: 5,
+      noWrap: true,
+      keepBuffer: 8,
+      updateWhenIdle: true,
+      updateWhenZooming: false,
+      crossOrigin: true
+    }).addTo(map);
 
     const defaultStyle = {
       color: '#ffffff',
       weight: 1,
       opacity: 0.85,
-      fillOpacity: 0.68,
+      fillOpacity: 0.55,
       fillColor: '#cbd5e1'
     };
 
@@ -950,7 +936,6 @@
         map.fitBounds(geoLayer.getBounds(), { padding: [30, 30] });
       });
 
-      document.getElementById('basemapBtn').addEventListener('click', toggleBasemap);
 
       document.getElementById('searchBtn').addEventListener('click', () => {
         searchPostcode(document.getElementById('searchInput').value);
